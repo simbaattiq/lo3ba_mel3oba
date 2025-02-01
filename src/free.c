@@ -69,3 +69,41 @@ void double_free(char **args)
 	free(args);
 	args = NULL;
 }
+
+int free_error_fd(char *msg, char **map, int fd, int fd2)
+{
+    if (msg)
+    {
+    	printf("%s", msg);
+    }
+    if (map)
+        double_free(map);
+    close(fd);
+    close(fd2);
+	return (1);
+}
+
+int error_tf(char *msg, char **cvalue, char **fvalue)
+{
+	if (msg)
+	{
+		printf("%s", msg);
+	}
+	if (cvalue)
+	{
+		double_free(cvalue);
+	}
+	if (fvalue)
+	{
+		double_free(fvalue);
+	}
+	return (1);
+
+}
+
+int	error_msg(char *msg, int status)
+{
+	if (msg)
+		printf("%s", msg);
+	return (status);
+}
