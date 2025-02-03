@@ -12,6 +12,66 @@
 
 #include <cub3D.h>
 
+int count_map_lines(int fd)
+{
+	int		i;
+	int		j;
+	char	*line;
+	int		ws_flag;
+
+	j = 0;
+	
+	line = get_first_line(fd);
+	while (line)
+	{
+		i = 0;
+		ws_flag = 0;
+		while (line[i] && iswhite_space(line[i]))
+		{
+			ws_flag++;
+			i++;
+
+		}
+		if (ws_flag && line[i] == '\0')
+			j++;
+		if (line[i] == '1' || line[i] == '0')
+		{
+			j++;
+		}
+
+		free(line);
+		line = get_next_line(fd);
+	}
+	return (j);
+}
+
+char    **strdup_map(int fd, int lcount)
+{
+	int		i;
+	char	**new;
+	char	*line;
+
+	new = malloc(sizeof(char *) * (lcount + 2));
+	line = get_first_line(fd);
+	if (!new || !line)
+		return (NULL);
+	new[0] = dup_mline(line);
+	i = 1;
+	while (i <= lcount)
+	{
+		line = get_next_line(fd);
+
+		// if (!line)
+		// 	break;
+
+		new[i] = dup_mline(line);
+		i++;
+
+	}
+	new[i] = NULL;
+	return (new);
+}
+
 char	*get_first_line(int fd)
 {
 	int		i;
@@ -31,6 +91,8 @@ char	*get_first_line(int fd)
 				if (line[j] && (line[j] == '0' || line[j] == '1'))
 					return (line);
 			}
+			else if (invalid_mapchar(line[i]))
+				break;
 			i++;
 		}
 		free(line);
@@ -46,11 +108,13 @@ char	*dup_mline(char *line)
 	char	*new;
 
 	i = 0;
+	if (!line)
+		return (NULL);
 	len = ft_strlen(line) + 1;
 	new = malloc(sizeof(char) * len);
 	if (!new)
 		return (NULL);
-	while (i < len && line[i])
+	while (line[i])
 	{
 		if (line[i] == '\n')
 		{
@@ -61,6 +125,8 @@ char	*dup_mline(char *line)
 			new[i] = line[i];
 		i++;
 	}
+	if (line[i] == '\0')
+		new[i] = '\0';
 	free(line);
 	return (new);
 }
@@ -78,19 +144,3 @@ bool	is_valid_cell(int x, int y, char **map, int map_height)
 	return (true);
 }
 
-bool	invalid_mapchar(char c)
-{
-	if (c == 'N' || c == 'S' || c == 'W'
-		|| c == 'E' || c == '0' || c == '1')
-	{
-		return (0);
-	}
-	return (1);
-}
-
-bool	is_player_char(char c)
-{
-	if (c == 'N' || c == 'S' || c == 'W' || c == 'E')
-		return (1);
-	return (0);
-}

@@ -21,12 +21,16 @@ int	map_invalid(char *file)
 
 	fd = open(file, O_RDONLY);
 	fd2 = open(file, O_RDONLY);
-	lcount = count_lines(fd2);
+	lcount = count_map_lines(fd2);
 	if (fd < 0 || fd2 < 0)
 	{
 		return (printf("Error\nFDs\n"), 1);
 	}
 	map = strdup_map(fd, lcount);
+	
+	// Printing the map on the stdout
+	print_map(map); ///// // ///
+
 	if (!map)
 		return (free_error_fd(M_EMSG1, map, fd, fd2));
 	if (!map_closed(map, lcount))
@@ -51,11 +55,13 @@ bool	map_closed(char **map, int ht)
 	len = 0;
 	while (++y < ht)
 	{
+		if (onlysp_orempty(map[y]))
+			return (false);
+
 		x = -1;
 		while (++x < (int)ft_strlen(map[y]))
 		{
-			if (map[y][x] == '0' || map[y][x] == 'N' || map[y][x] == 'S'
-				|| map[y][x] == 'E' || map[y][x] == 'W')
+			if (map[y][x] == '0' || is_player_char(map[y][x]))
 			{
 				len = (int)ft_strlen(map[y]) - 1;
 				if (x == 0 || x == len || y == 0 || y == ht - 1)
@@ -83,8 +89,7 @@ int	valid_map_chars(char **map)
 		j = -1;
 		while (map[i][++j])
 		{
-			if (invalid_mapchar(map[i][j])
-				&& !iswhite_space(map[i][j]))
+			if (invalid_mapchar(map[i][j]))
 			{
 				flag++;
 			}

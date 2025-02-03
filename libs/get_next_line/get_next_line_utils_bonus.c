@@ -3,104 +3,90 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mel-atti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/15 12:03:58 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/02/15 12:50:13 by zelkalai         ###   ########.fr       */
+/*   Created: 2023/12/18 17:18:43 by mel-atti          #+#    #+#             */
+/*   Updated: 2023/12/19 15:26:32 by mel-atti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-int	newline_checker(t_list *list)
+char	*ft_strjoin2(char *s1, char *s2)
 {
-	int	i;
+	char	*result;
+	size_t	len1;
+	size_t	len2;
 
-	if (list == NULL)
-		return (0);
-	while (list)
+	if (!s1)
 	{
-		i = 0;
-		while (list->content[i] != '\0')
-		{
-			if (list->content[i] == '\n')
-				return (1);
-			i++;
-		}
-		list = list->next;
+		s1 = (char *)malloc(1);
+		s1[0] = '\0';
 	}
-	return (0);
+	if (!s1 || !s2)
+		return (NULL);
+	len1 = ft_strlen2(s1);
+	len2 = ft_strlen2(s2);
+	result = (char *)malloc((len1 + len2 + 1) * sizeof (char));
+	if (!result)
+		return (NULL);
+	result = ft_str_append(s1, s2, result);
+	free (s1);
+	return (result);
 }
 
-int	llist(t_list *list)
-{
-	int	i;
-	int	l;
-
-	l = 0;
-	while (list)
-	{
-		i = 0;
-		if (list == NULL)
-			return (0);
-		while (list->content[i])
-		{
-			if (list->content[i] == '\n')
-			{
-				l++;
-				return (l);
-			}
-			i++;
-			l++;
-		}
-		list = list->next;
-	}
-	return (l);
-}
-
-void	copy_the_list(t_list *list, char *the_line)
+char	*ft_str_append(char *s1, char *s2, char *result)
 {
 	int	i;
 	int	j;
 
+	if (!s1 || !s2)
+		return (NULL);
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		result[i] = s1[i];
+		i++;
+	}
 	j = 0;
-	while (list)
+	while (s2[j] != '\0')
 	{
-		i = 0;
-		while (list->content[i] != '\0')
-		{
-			if (list->content[i] == '\n')
-			{
-				the_line[j] = '\n';
-				the_line[++j] = '\0';
-				return ;
-			}
-			the_line[j++] = list->content[i++];
-		}
-		list = list->next;
+		result[i] = s2[j];
+		i++;
+		j++;
 	}
-	the_line[j] = '\0';
+	result[i] = '\0';
+	return (result);
 }
 
-void	dealloc(t_list **list, t_list *clean_node, char *buf)
+char	*ft_strchr2(char *str, int c)
 {
-	t_list	*tmp;
-
-	if (*list == NULL)
-		return ;
-	while (*list)
+	if (!str)
+		return (NULL);
+	while (*str != '\0')
 	{
-		tmp = (*list)->next;
-		free((*list)->content);
-		free(*list);
-		*list = tmp;
+		if (*str == (char)c)
+			return ((char *)str);
+		str++;
 	}
-	*list = NULL;
-	if (clean_node->content[0])
-		*list = clean_node;
-	else
-	{
-		free(buf);
-		free(clean_node);
-	}
+	if ((char)c == '\0')
+		return ((char *)str);
+	return (NULL);
 }
+
+size_t	ft_strlen2(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	return (i);
+}
+
+// READ of size 1 at 0x5030000007de thread T0
+//     #0 0x55f207664596 in valid_map_chars src/parse_maputils.c:84
+//     #1 0x55f207663fd2 in map_invalid src/parse_maputils.c:34
+//     #2 0x55f207663e60 in parse src/parse_map.c:172
+//     #3 0x55f207661128 in init src/main.c:46
+//     #4 0x55f20766135c in main src/main.c:66

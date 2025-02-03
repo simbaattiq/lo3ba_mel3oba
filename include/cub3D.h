@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 11:53:02 by zelkalai          #+#    #+#             */
-/*   Updated: 2025/02/01 04:29:50 by mel-atti         ###   ########.fr       */
+/*   Updated: 2025/01/26 11:55:06 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <structs_helper.h>
+# include <sys/time.h>
+# include <time.h>
 # include <unistd.h>
-
 #include <stdbool.h>
+#include <fcntl.h>
 
 
 #define M_EMSG1 "Error\nDupping the map!\n"
@@ -33,18 +35,15 @@
 #define M_EMSG6 "Error\nFloor RGB values out of range 0-255\n"
 #define M_EMSG7 "Error\nCeiling RGB values out of range 0-255\n"
 
-// # define SCREEN_HEIGHT 480
-// # define SCREEN_WIDTH 640
 # define SCREEN_HEIGHT 960
 # define SCREEN_WIDTH 1280
-
 # define MINIMAP_SCALE 0.3
 # define NUM_RAYS SCREEN_WIDTH
 # define FOV 1.0471975512
-# define OFFSET 5
-# define MAX_KEYS 6
-# define MOVE_SPEED 0.03
-# define ROTATION_SPEED 0.03
+# define OFFSET 4
+# define MAX_KEYS 7
+# define MOVE_SPEED 0.1
+# define ROTATION_SPEED 0.1
 # define PITCH_FACTOR 1
 
 typedef struct s_pl
@@ -65,6 +64,15 @@ typedef struct s_img
 	int				height;
 }					t_img;
 
+typedef struct s_spirit
+{
+	t_img			aim[21];
+	int				animating;
+	int				current_frame;
+	unsigned long	last_frame;
+
+}					t_spirit;
+
 typedef struct s_data
 {
 	struct s_mlx	*mlx;
@@ -84,6 +92,11 @@ typedef struct s_data
 	t_img			tex_so;
 	t_img			tex_ea;
 	t_img			tex_we;
+	int				mouse_moving;
+	int				last_mouse_x;
+	unsigned long	last_mouse_time;
+	t_spirit		spirit;
+	t_img			door;
 }					t_data;
 
 typedef struct s_mlx
@@ -96,6 +109,7 @@ typedef struct s_mlx
 }					t_mlx;
 
 /*main.c*/
+int					red_cross(t_mlx *mlx);
 void				ray_casting(t_mlx *mlx, t_data *data);
 int					game_loop(t_mlx *mlx);
 int					init(t_mlx *mlx, t_data *data, char *argv, t_pl *player);
@@ -115,7 +129,6 @@ int					check_player_position(t_data *data, int i, int j, int *p);
 int					ft_ft(int fd, t_data *data);
 int					set_map(char *file, t_data *data);
 int					check_file(char *file);
-int					parse(char *file, t_data *data);
 
 /****************************************************/
 /////////////////*   PARSE MORE *////////////////////
@@ -129,11 +142,21 @@ bool				player_hadar(char **map);
 bool				check_cell(int x, int y, char **map, int ht);
 
 /*parse_more_utils.c*/
+int					count_map_lines(int fd);
+char				**strdup_map(int fd, int lcount);
 char				*get_first_line(int fd);
 char				*dup_mline(char *line);
 bool				is_valid_cell(int x, int y, char **map, int map_height);
+
+/*parse_more_utils2.c*/
+bool				onlysp_orempty(char *mapl);
 bool				invalid_mapchar(char c);
 bool				is_player_char(char c);
+void				print_map(char **map); //// // /
+// void				print_data(t_data *data);
+int					duplicate_configs(char *file);
+int					configs_found(char *line);
+
 
 /*parse_configs.c*/
 int					check_configs(t_data *data);
@@ -147,7 +170,6 @@ bool				invalid_char(char c);
 int					ft_check_bound(char **ptr);
 bool				iswhite_space(char c);
 bool				ft_isdigit_two(char c);
-char				**strdup_map(int fd, int lcount);
 
 /*free.c*/
 void				double_free(char **args);
@@ -159,16 +181,27 @@ int					error_msg(char *msg, int status);
                 /*******/
 /////////////////////////////////////////
 
+int					parse(char *file, t_data *data);
+
+/*mouse.c*/
+int					mouse_rotation(int x, int y, t_data *data);
+int					mouse_click(int keycode, int x, int y, t_data *data);
+void				wait_for_frame(t_data *data);
+void				check_frame(t_mlx *mlx);
+void				left_click(t_mlx *mlx);
 
 /*keys.c*/
+void				check_door(t_data *data);
 void				key_mouvment(t_mlx *mlx);
 int					key_rotation(t_mlx *mlx);
 int					key_press(int keycode, t_data *data);
 int					key_release(int keycode, t_data *data);
-int					red_cross(t_mlx *mlx);
 
 /*keys_helper.c*/
+unsigned long		get_current_time(void);
 void				get_direction_vector(double angle, double *dx, double *dy);
+int					check_corner(t_data *data, t_mlx *mlx, double new_x,
+						double new_y);
 void				collision_detection(t_mlx *mlx, double *new_x,
 						double *new_y);
 void				change_x_y(t_mlx *mlx, t_key_mouvment *k);

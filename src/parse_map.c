@@ -169,12 +169,19 @@ int	parse(char *file, t_data *data)
 	data->map = NULL;
 	if (check_file(file))
 		return (1);
+	if (duplicate_configs(file))
+		return (1);
 	if (map_invalid(file)) //
 		return (1);
 	if (set_map(file, data))
 		return (1);
 	if (check_configs(data)) //
 		return (1);
+	
+	
+	// printf("222222\n");
+	// print_map(data->map);
+	// print_data(data); ///////
 
 	return (0);
 }

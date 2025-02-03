@@ -3,33 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mel-atti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/15 12:04:28 by zelkalai          #+#    #+#             */
-/*   Updated: 2025/01/26 12:48:53 by zelkalai         ###   ########.fr       */
+/*   Created: 2023/12/18 18:14:41 by mel-atti          #+#    #+#             */
+/*   Updated: 2023/12/19 15:24:03 by mel-atti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 7
-# endif
-
-# include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <libft.h>
 
-char				*get_next_line(int fd);
-void				list_maker(t_list **list, int fd);
-void				AddToList(t_list **list, char *buf);
-char				*get_the_line(t_list *list);
-void				clist(t_list **list);
-void				dealloc(t_list **list, t_list *clean_node, char *buf);
-void				copy_the_list(t_list *list, char *the_line);
-int					llist(t_list *list);
-int					newline_checker(t_list *list);
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 10
+# endif
+
+char	*ft_line_scooper(int fd, char *line_buff);
+
+char	*ft_line_getter(char *line_buff);
+
+char	*ft_line_cleaner(char *line_buff);
+
+char	*get_next_line(int fd);
+
+char	*ft_strjoin2(char *s1, char *s2);
+
+char	*ft_str_append(char *s1, char *s2, char *result);
+
+char	*ft_strchr2(char *str, int c);
+// char    *ft_strchr(const char *s, int c);
+
+size_t	ft_strlen2(char *str);
 
 #endif

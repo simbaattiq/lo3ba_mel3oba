@@ -3,114 +3,104 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mel-atti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/15 12:04:15 by zelkalai          #+#    #+#             */
-/*   Updated: 2024/02/16 02:34:15 by zelkalai         ###   ########.fr       */
+/*   Created: 2023/12/18 16:32:45 by mel-atti          #+#    #+#             */
+/*   Updated: 2023/12/19 15:22:41 by mel-atti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-void	clist(t_list **list)
+char	*ft_line_scooper(int fd, char *line_buff)
 {
-	t_list	*last_node;
-	t_list	*clean_node;
-	int		i;
-	int		k;
-	char	*buf;
+	char	*read_buff;
+	ssize_t	rb;
 
-	buf = malloc(BUFFER_SIZE + 1);
-	clean_node = malloc(sizeof(t_list));
-	if (buf == NULL || clean_node == NULL)
-		return ;
-	last_node = *list;
-	while (last_node->next)
+	rb = 1;
+	read_buff = (char *)malloc((BUFFER_SIZE + 1) * sizeof (char));
+	if (!read_buff)
+		return (NULL);
+	while (fd >= 0 && rb != 0 && ft_strchr2(line_buff, '\n') == NULL)
 	{
-		last_node = last_node->next;
+		rb = read(fd, read_buff, BUFFER_SIZE);
+		if (rb == -1)
+		{
+			free(read_buff);
+			return (NULL);
+		}
+		read_buff[rb] = '\0';
+		line_buff = ft_strjoin2(line_buff, read_buff);
 	}
+	free (read_buff);
+	return (line_buff);
+}
+
+char	*ft_line_getter(char *line_buff)
+{
+	char	*cup_str;
+	int		len;
+
+	len = 0;
+	if (!line_buff[len])
+		return (NULL);
+	while (line_buff[len] != '\0' && line_buff[len] != '\n')
+		len++;
+	cup_str = (char *)(malloc((len + 2) * sizeof (char)));
+	if (!cup_str)
+		return (NULL);
+	len = 0;
+	while (line_buff[len] != '\0' && line_buff[len] != '\n')
+	{
+		cup_str[len] = line_buff[len];
+		len++;
+	}
+	if (line_buff[len] == '\n')
+	{
+		cup_str[len] = '\n';
+		len++;
+	}
+	cup_str[len] = '\0';
+	return (cup_str);
+}
+
+char	*ft_line_cleaner(char *line_buff)
+{
+	char	*cup_str2;
+	size_t	len;
+	size_t	i;
+
+	len = 0;
+	while (line_buff[len] != '\0' && line_buff[len] != '\n')
+		len++;
+	if (!line_buff[len])
+	{
+		free (line_buff);
+		return (NULL);
+	}
+	cup_str2 = (char *)malloc(ft_strlen2(line_buff) - len);
+	if (!cup_str2)
+		return (NULL);
+	len += 1;
 	i = 0;
-	k = 0;
-	while (last_node->content[i] && last_node->content[i] != '\n')
-		i++;
-	while (last_node->content[++i])
-		buf[k++] = last_node->content[i];
-	buf[k] = '\0';
-	clean_node->content = buf;
-	clean_node->next = NULL;
-	dealloc(list, clean_node, buf);
-}
-
-char	*get_the_line(t_list *list)
-{
-	int		l;
-	char	*the_line;
-
-	if (list == NULL)
-		return (NULL);
-	l = llist(list);
-	the_line = malloc(l + 1);
-	if (the_line == NULL)
-		return (NULL);
-	copy_the_list(list, the_line);
-	return (the_line);
-}
-
-void	add_to_list(t_list **list, char *buf)
-{
-	t_list	*new_node;
-	t_list	*last_node;
-
-	new_node = malloc(sizeof(t_list));
-	if (new_node == NULL)
-		return ;
-	new_node->content = buf;
-	new_node->next = NULL;
-	if (*list == NULL)
-		*list = new_node;
-	else
-	{
-		last_node = *list;
-		while (last_node->next != NULL)
-		{
-			last_node = last_node->next;
-		}
-		last_node->next = new_node;
-	}
-}
-
-void	list_maker(t_list **list, int fd)
-{
-	ssize_t		r;
-	char		*buf;
-
-	while (!newline_checker(*list))
-	{
-		buf = malloc((size_t)BUFFER_SIZE + 1);
-		if (buf == NULL)
-			return ;
-		r = read(fd, buf, BUFFER_SIZE);
-		if (r <= 0)
-		{
-			free(buf);
-			return ;
-		}
-		buf[r] = '\0';
-		add_to_list(list, buf);
-	}
+	while (line_buff[len] != '\0')
+		cup_str2[i++] = line_buff[len++];
+	cup_str2[i] = '\0';
+	free (line_buff);
+	return (cup_str2);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_list	*list[1024];
-	char			*the_line;
+	static char	*line_buff[255];
+	char		*rtrn_line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	list_maker(&list[fd], fd);
-	if (list[fd] == NULL)
+	line_buff[fd] = ft_line_scooper(fd, line_buff[fd]);
+	if (!line_buff[fd])
 		return (NULL);
-	the_line = get_the_line(list[fd]);
-	clist(&list[fd]);
-	return (the_line);
+	rtrn_line = ft_line_getter(line_buff[fd]);
+	line_buff[fd] = ft_line_cleaner(line_buff[fd]);
+	return (rtrn_line);
 }
