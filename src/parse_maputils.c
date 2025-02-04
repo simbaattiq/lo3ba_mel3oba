@@ -21,27 +21,21 @@ int	map_invalid(char *file)
 
 	fd = open(file, O_RDONLY);
 	fd2 = open(file, O_RDONLY);
-	lcount = count_map_lines(fd2);
 	if (fd < 0 || fd2 < 0)
-	{
-		return (printf("Error\nFDs\n"), 1);
-	}
+		return (printf("Error\nOpening the file\n"), 1);
+	lcount = count_map_lines(fd2);
+	if (lcount <= 0)
+		return (free_error_fd(M_EMSG8, NULL, fd, fd2));
 	map = strdup_map(fd, lcount);
-	
-	// Printing the map on the stdout
-	print_map(map); ///// // ///
-
 	if (!map)
-		return (free_error_fd(M_EMSG1, map, fd, fd2));
+		return (free_error_fd(NULL, NULL, fd, fd2));
 	if (!map_closed(map, lcount))
 		return (free_error_fd(M_EMSG2, map, fd, fd2));
 	if (!valid_map_chars(map))
 		return (free_error_fd(M_EMSG5, map, fd, fd2));
 	if (!player_hadar(map))
 		return (free_error_fd(NULL, map, fd, fd2));
-	double_free(map);
-	close(fd);
-	close(fd2);
+	free_error_fd(NULL, map, fd, fd2);
 	return (0);
 }
 

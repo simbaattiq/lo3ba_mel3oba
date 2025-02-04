@@ -70,14 +70,26 @@ void    print_map(char **map)
 	}
 }
 
-/////////////////////////////////////
-// void print_data(t_data *data)
-// {
-//     if (data->f)
-//         printf("data->F: [%s]\n", data->f);
-//     if (data->c)
-//         printf("data->C: [%s]\n", data->c);
-// }
+///////////////////////////////////
+void print_data(t_data *data)
+{
+    if (data->f)
+{        printf("data->F: [%s]\n", data->f);
+}    if (data->c)
+{        printf("data->C: [%s]\n", data->c);
+}	if (data->no)
+{		printf("data->no: [%s]\n", data->no);
+}	if (data->so)
+{        printf("data->so: [%s]\n", data->so);
+}	if (data->we)
+{        printf("data->we: [%s]\n", data->we);
+}	if (data->ea)
+{        printf("data->ea: [%s]\n", data->ea);
+}
+
+printf ("**F_val: [%d] \t C_VAL: [%d]**\n", data->f_value, data->c_value);
+
+}
 
 
 int duplicate_configs(char *file)

@@ -52,21 +52,19 @@ char    **strdup_map(int fd, int lcount)
 	char	*line;
 
 	new = malloc(sizeof(char *) * (lcount + 2));
+	if (!new)
+		return (printf("Error\nStrdup_map()\n"), NULL);
 	line = get_first_line(fd);
-	if (!new || !line)
-		return (NULL);
+	if (!line)
+		return (printf("Error\nThere's no 1st map's line\n"), NULL);
+
 	new[0] = dup_mline(line);
 	i = 1;
 	while (i <= lcount)
 	{
 		line = get_next_line(fd);
-
-		// if (!line)
-		// 	break;
-
 		new[i] = dup_mline(line);
 		i++;
-
 	}
 	new[i] = NULL;
 	return (new);
@@ -75,11 +73,9 @@ char    **strdup_map(int fd, int lcount)
 char	*get_first_line(int fd)
 {
 	int		i;
-	int		j;
 	char	*line;
 
 	line = get_next_line(fd);
-	j = 0;
 	while (line)
 	{
 		i = 0;
@@ -87,9 +83,7 @@ char	*get_first_line(int fd)
 		{
 			if (line[i] && (line[i] == '0' || line[i] == '1'))
 			{
-				j = i + 1;
-				if (line[j] && (line[j] == '0' || line[j] == '1'))
-					return (line);
+				return (line);
 			}
 			else if (invalid_mapchar(line[i]))
 				break;
