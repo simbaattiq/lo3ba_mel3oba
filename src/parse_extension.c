@@ -56,9 +56,10 @@ int	trim_whitesp(t_data *data)
 	return (0);
 }
 
-int	open_tfiles_check(t_data *data, int *fd)
+int	open_tfiles_check(t_data *data)
 {
 	int	i;
+	int	fd[4];
 
 	fd[0] = open(data->no, O_RDONLY);
 	fd[1] = open(data->so, O_RDONLY);

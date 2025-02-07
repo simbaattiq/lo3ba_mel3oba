@@ -42,20 +42,12 @@ int	check_fnc(t_data *data)
 
 int	check_texture(t_data *data)
 {
-	int	fd[4];
-	int	i;
-
 	if (trim_whitesp(data))
 		return (printf("Error\ntrimming white spaces\n"), 1);
-	fd[0] = open(data->no, O_RDONLY);
-	fd[1] = open(data->so, O_RDONLY);
-	fd[2] = open(data->we, O_RDONLY);
-	fd[3] = open(data->ea, O_RDONLY);
-	i = -1;
 	if (check_extension(data))
 		return (printf("Error\nTexture file must end with .xpm\n"), 1);
-	if (open_tfiles_check(data, fd))
-		return (printf("Error\n888 can't open files\n"), 1);
+	if (open_tfiles_check(data))
+		return (printf("Error\nCan't open files check texture\n"), 1);
 	return (0);
 }
 
