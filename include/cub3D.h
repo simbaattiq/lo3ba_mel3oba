@@ -34,8 +34,8 @@
 # define M_EMSG7 "Error\nCeiling RGB values out of range 0-255\n"
 # define M_EMSG8 "Error\nThere's No Map\n"
 # define M_EMSG9 "Error\nWrong configs\n"
-# define SCREEN_HEIGHT 480
-# define SCREEN_WIDTH 640
+# define SCREEN_HEIGHT 960
+# define SCREEN_WIDTH 1280
 # define MINIMAP_SCALE 0.3
 # define NUM_RAYS SCREEN_WIDTH
 # define FOV 1.0471975512
@@ -171,6 +171,7 @@ int					duplicate_configs(char *file);
 int					configs_found(char *line);
 
 /*parse_configs.c*/
+
 int					check_configs(t_data *data);
 int					check_fnc(t_data *data);
 int					check_texture(t_data *data);
@@ -207,6 +208,7 @@ int					get_llenght(char **map);
 /*parse_extension.c*/
 int					check_extension(t_data *data);
 int					invalide_extension(char *str);
+int					trim_whitesp(t_data *data);
 
 /*mouse.c*/
 int					mouse_rotation(int x, int y, t_data *data);

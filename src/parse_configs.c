@@ -25,13 +25,13 @@ int	check_fnc(t_data *data)
 {
 	if (invalid_fc_line(data->c))
 	{
-		printf("Error\n invalid char in ceiling configs\n");
+		printf("Error\nInvalid RGB value in ceiling configs\n");
 		return (1);
 	}
 	if (invalid_fc_line(data->f))
 	{
-		printf("Error\n invalid char in floor configs\n");
-		printf("[%s]\n", data->f);
+		printf("Error\nInvalid RGB value in floor configs\n");
+		// printf("[%s]\n", data->f);
 		return (1);
 	}
 	if (check_rgb_num(data))
@@ -46,6 +46,11 @@ int	check_texture(t_data *data)
 	int	fd[4];
 	int	i;
 
+	if(trim_whitesp(data))
+	{
+		printf("Error\ntrimming white spaces\n");
+		return (1);
+	}
 	fd[0] = open(data->no, O_RDONLY);
 	fd[1] = open(data->so, O_RDONLY);
 	fd[2] = open(data->we, O_RDONLY);
@@ -53,6 +58,7 @@ int	check_texture(t_data *data)
 	i = -1;
 	if (check_extension(data))
 		return (printf("Error\nTexture file must end with .xpm\n"), 1);
+
 	while (++i < 4)
 	{
 		if (fd[i] < 0)

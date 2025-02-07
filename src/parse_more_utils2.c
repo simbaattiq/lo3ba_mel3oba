@@ -31,6 +31,7 @@ bool	onlysp_orempty(char *mapl)
 	return (0);
 }
 
+
 bool	invalid_mapchar(char c)
 {
 	if (!is_player_char(c) && !iswhite_space(c) && c != '0' && c != '1'
@@ -77,11 +78,17 @@ int	duplicate_configs(char *file)
 
 int	configs_found(char *line)
 {
-	if (line[0] == 'F' || line[0] == 'C'
-		|| (line[0] == 'N' && line[1] == 'O')
-		|| (line[0] == 'S' && line[1] == 'O')
-		|| (line[0] == 'W' && line[1] == 'E')
-		|| (line[0] == 'E' && line[1] == 'A'))
+	int i;
+
+	i = 0;
+
+	while (line[i] && iswhite_space(line[i]))
+		i++;
+	if (line[i] == 'F' || line[i] == 'C'
+		|| (line[i] == 'N' && line[i + 1] == 'O')
+		|| (line[i] == 'S' && line[i + 1] == 'O')
+		|| (line[i] == 'W' && line[i + 1] == 'E')
+		|| (line[i] == 'E' && line[i + 1] == 'A'))
 	{
 		return (1);
 	}

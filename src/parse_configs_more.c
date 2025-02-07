@@ -16,6 +16,7 @@ int	check_first_char(char *file)
 {
 	int		fd;
 	char	*line;
+	int		i;
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
@@ -23,12 +24,15 @@ int	check_first_char(char *file)
 	line = get_next_line(fd);
 	while (line)
 	{
-		if (!valid_first_char(line[0]))
+		i = 0;
+		while (line[i] && iswhite_space(line[i]))
+			i++;
+		if (!valid_first_char(line[i]))
 		{
 			free (line);
 			return (error_msg(M_EMSG9, 1));
 		}
-		if (!valid_following_chars(line))
+		if (!valid_following_chars(&line[i]))
 		{
 			free (line);
 			return (error_msg(M_EMSG9, 1));
