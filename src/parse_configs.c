@@ -6,7 +6,7 @@
 /*   By: mel-atti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 02:51:15 by mel-atti          #+#    #+#             */
-/*   Updated: 2025/02/01 03:25:28 by mel-atti         ###   ########.fr       */
+/*   Updated: 2025/02/07 02:30:26 by mel-atti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	check_fnc(t_data *data)
 {
 	if (invalid_fc_line(data->c))
 	{
-		printf("Error\n invalid char in ceiling configs\n");		
+		printf("Error\n invalid char in ceiling configs\n");
 		return (1);
 	}
 	if (invalid_fc_line(data->f))
@@ -51,15 +51,16 @@ int	check_texture(t_data *data)
 	fd[2] = open(data->we, O_RDONLY);
 	fd[3] = open(data->ea, O_RDONLY);
 	i = -1;
+	if (check_extension(data))
+		return (printf("Error\nTexture file must end with .xpm\n"), 1);
 	while (++i < 4)
 	{
 		if (fd[i] < 0)
 		{
-			printf("Error\n can't open files\n");
 			i = -1;
 			while (++i < 4)
 				close(fd[i]);
-			return (1);
+			return (printf("Error\n can't open files\n"), 1);
 		}
 	}
 	i = -1;
@@ -94,7 +95,7 @@ int	check_rgb_num(t_data *data)
 	fvalue = ft_split(data->f, ',');
 	cvalue = ft_split(data->c, ',');
 	if (!cvalue || !fvalue)
-		return (printf("Error\nFt_split!!!\n"), 1);
+		return (printf("Error\ncheck_rgb_num, ft_split!!!\n"), 1);
 	if (ft_check_bound(fvalue))
 		return (error_tf(M_EMSG6, cvalue, fvalue));
 	if (ft_check_bound(cvalue))
@@ -103,10 +104,7 @@ int	check_rgb_num(t_data *data)
 		return (error_tf(NULL, cvalue, fvalue));
 	if (!set_rgb_values(data, cvalue, fvalue))
 		return (error_tf(NULL, cvalue, fvalue));
-
 	double_free(fvalue);
 	double_free(cvalue);
 	return (0);
 }
-
-

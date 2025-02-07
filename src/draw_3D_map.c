@@ -19,7 +19,7 @@ void	draw_wall_slice(t_mlx *mlx, t_draw_map *d, t_img *texture, int column)
 	init_wall_slice(&w, d, texture);
 	w.y = -1;
 	while (++w.y < w.top)
-		put_pixel_to_image(mlx->img, column, w.y, 0x4ff2f7);
+		put_pixel_to_image(mlx->img, column, w.y, mlx->data->c_value);
 	while (w.y <= w.bottom)
 	{
 		if (w.y >= 0 && w.y < SCREEN_HEIGHT)
@@ -33,7 +33,7 @@ void	draw_wall_slice(t_mlx *mlx, t_draw_map *d, t_img *texture, int column)
 		w.tex_y += w.step;
 	}
 	while (++w.y < SCREEN_HEIGHT)
-		put_pixel_to_image(mlx->img, column, w.y, 0xf0a64d);
+		put_pixel_to_image(mlx->img, column, w.y, mlx->data->f_value);
 }
 
 void	init_ray_data(t_draw_map *d, t_data *data)
@@ -81,8 +81,8 @@ void	get_wall_dist(t_draw_map *d, t_data *data)
 			d->map_y += d->step_y;
 			d->side = 1;
 		}
-		if (data->map[d->map_y][d->map_x] == '1'
-			|| data->map[d->map_y][d->map_x] == 'D')
+		if (data->mini_map[d->map_y][d->map_x] == '1'
+			|| data->mini_map[d->map_y][d->map_x] == 'D')
 			break ;
 	}
 	if (d->side == 0)
@@ -122,7 +122,7 @@ void	draw_map(t_mlx *mlx, t_data *data)
 	{
 		init_ray_data(&d, data);
 		get_wall_dist(&d, data);
-		if (data->map[d.map_y][d.map_x] == 'D')
+		if (data->mini_map[d.map_y][d.map_x] == 'D')
 			draw_wall_slice(mlx, &d, &data->door, d.i);
 		else
 			draw_wall(mlx, data, &d);
