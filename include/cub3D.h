@@ -6,25 +6,25 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 11:53:02 by zelkalai          #+#    #+#             */
-/*   Updated: 2025/01/26 11:55:06 by zelkalai         ###   ########.fr       */
+/*   Updated: 2025/02/07 22:50:35 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include <fcntl.h>
 # include <get_next_line_bonus.h>
 # include <libft.h>
 # include <math.h>
 # include <mlx.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <structs_helper.h>
 # include <sys/time.h>
 # include <time.h>
 # include <unistd.h>
-# include <stdbool.h>
-# include <fcntl.h>
 
 # define M_EMSG2 "Error\nThe map is not closed!\n"
 # define M_EMSG3 "Error\nToo many player Symbols on the map\n"
@@ -34,8 +34,8 @@
 # define M_EMSG7 "Error\nCeiling RGB values out of range 0-255\n"
 # define M_EMSG8 "Error\nThere's No Map\n"
 # define M_EMSG9 "Error\nWrong configs\n"
-# define SCREEN_HEIGHT 960
-# define SCREEN_WIDTH 1280
+# define SCREEN_HEIGHT 480
+# define SCREEN_WIDTH 640
 # define MINIMAP_SCALE 0.3
 # define NUM_RAYS SCREEN_WIDTH
 # define FOV 1.0471975512
@@ -128,6 +128,7 @@ int					error_tf(char *msg, char **cvalue, char **fvalue);
 int					error_msg(char *msg, int status);
 
 /*load_texture.c*/
+void				init3(t_data *data);
 t_img				load_texture(t_mlx *mlx, char *path);
 void				get_texture(t_mlx *mlx, t_data *data);
 
@@ -209,6 +210,7 @@ int					get_llenght(char **map);
 int					check_extension(t_data *data);
 int					invalide_extension(char *str);
 int					trim_whitesp(t_data *data);
+int					open_tfiles_check(t_data *data, int *fd);
 
 /*mouse.c*/
 int					mouse_rotation(int x, int y, t_data *data);
