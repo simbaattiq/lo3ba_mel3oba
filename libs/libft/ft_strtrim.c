@@ -6,7 +6,7 @@
 /*   By: zelkalai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/12 14:38:01 by zelkalai          #+#    #+#             */
-/*   Updated: 2025/02/07 23:17:50 by mel-atti         ###   ########.fr       */
+/*   Updated: 2023/12/01 18:12:59 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,6 @@ char	*ft_strtrim(char const *s1, char const *set)
 		str[i++] = s1[start++];
 	}
 	str[i] = '\0';
-	free((char *)s1);
+	free((char *)s1); //// // /
 	return (str);
 }

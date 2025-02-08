@@ -6,7 +6,7 @@
 /*   By: mel-atti <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 05:15:13 by mel-atti          #+#    #+#             */
-/*   Updated: 2025/02/07 02:39:44 by mel-atti         ###   ########.fr       */
+/*   Updated: 2025/02/08 14:55:07 by zelkalai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,22 @@ int	ft_ft(int fd, t_data *data)
 	line = get_parameters(fd, data);
 	p = 0;
 	i = 0;
-	while (line && i < data->map_h)
+	while (line || i < data->map_h)
 	{
-		data->map[i] = line;
-		j = -1;
-		data->map_w = 0;
-		while (data->map[i][++j])
-			ft_ft_handle(data, i, j, &p);
-		i++;
+		if (i < data->map_h)
+		{
+			data->map[i] = line;
+			j = -1;
+			data->map_w = 0;
+			while (data->map[i][++j])
+				ft_ft_handle(data, i, j, &p);
+			i++;
+		}
 		line = get_next_line(fd);
+		if (i >= data->map_h)
+			free(line);
 	}
-	if (line)
-		free(line);
-	if (p != 1)
-		return (1);
-	data->map[i] = NULL;
-	return (0);
+	return (last_ftft_check(data, line, p, i));
 }
 
 char	*get_parameters(int fd, t_data *data)
